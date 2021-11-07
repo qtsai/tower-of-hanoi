@@ -1,23 +1,36 @@
 function start() {
-    let number = document.getElementById("number").value
+    clearDisks();
+    initDisks();
+    resetMoves();
+    unsetDraggable();
+    setDraggable();
+}
+
+function clearDisks() {
     document.querySelectorAll(".disk").forEach(el => el.remove());
+
+}
+
+function initDisks() {
+    let number = document.getElementById("number").value
     let pillar = document.getElementById("pillar-left")
     for (let i = 0; i < number; i++) {
-        let size = number - i;
-        let disk = document.createElement("div")
-        disk.id = "disk" + size;
-        disk.classList.add("disk");
-        disk.value = size
-        disk.style.width = (size * 30) + 'px';
-        disk.style.backgroundColor = '#' + generateRandomColor();
-        disk.addEventListener('dragstart', function () {
-            drag(event)
-        }, false);
+        let disk = newDisk(number - i);
         pillar.appendChild(disk);
     }
-    resetMoves()
-    resetDraggable()
-    setDraggable();
+}
+
+function newDisk(size) {
+    let disk = document.createElement("div")
+    disk.id = "disk" + size;
+    disk.classList.add("disk");
+    disk.value = size
+    disk.style.width = (size * 30) + 'px';
+    disk.style.backgroundColor = generateRandomColor();
+    disk.addEventListener('dragstart', function () {
+        drag(event)
+    }, false);
+    return disk;
 }
 
 function generateRandomColor() {
@@ -25,10 +38,21 @@ function generateRandomColor() {
     while (randomColor.length <= 5) {
         randomColor = Math.floor(Math.random() * 16777215).toString(16);
     }
-    return randomColor;
+    return '#' + randomColor;
 }
 
-function resetDraggable() {
+// moves counter
+function increaseMoveCounter() {
+    document.getElementById("moves").innerText++
+}
+
+function resetMoves() {
+    document.getElementById("moves").innerText = '0';
+}
+
+// drag & drop
+
+function unsetDraggable() {
     document.querySelectorAll(".disk").forEach(el => {
         el.draggable = false
     });
@@ -40,14 +64,6 @@ function setDraggable() {
             el.lastElementChild.draggable = true;
         }
     })
-}
-
-function increaseMoveCounter() {
-    document.getElementById("moves").innerText++
-}
-
-function resetMoves() {
-    document.getElementById("moves").innerText = '0';
 }
 
 function allowDrop(ev) {
@@ -66,11 +82,13 @@ function drop(ev, el) {
         let data = ev.dataTransfer.getData("text");
         el.appendChild(document.getElementById(data));
     }
-    resetDraggable();
+    unsetDraggable();
     if (!isFinished()) {
         setDraggable();
     }
 }
+
+// rules
 
 function isValidMove(ev, el) {
     let value = ev.dataTransfer.getData("value")
