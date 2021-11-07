@@ -1,30 +1,25 @@
-function start() {
-    clearDisks();
+function initTower() {
+    stopAutoSolve();
     initDisks();
     resetMoves();
-    unsetDraggable();
+    disableDragging();
     setDraggable();
 }
 
-function clearDisks() {
-    document.querySelectorAll(".disk").forEach(el => el.remove());
-
-}
-
 function initDisks() {
+    document.querySelectorAll(".disk").forEach(el => el.remove());
     let number = document.getElementById("number").value
-    let pillar = document.getElementById("pillar-left")
+    let startingPillar = document.getElementById("pillar-left")
     for (let i = 0; i < number; i++) {
-        let disk = newDisk(number - i);
-        pillar.appendChild(disk);
+        startingPillar.appendChild(newDisk(number - i));
     }
 }
 
 function newDisk(size) {
-    let disk = document.createElement("div")
+    let disk = document.createElement("div");
     disk.id = "disk" + size;
     disk.classList.add("disk");
-    disk.value = size
+    disk.value = size;
     disk.style.width = (size * 30) + 'px';
     disk.style.backgroundColor = generateRandomColor();
     disk.addEventListener('dragstart', function () {
@@ -35,7 +30,7 @@ function newDisk(size) {
 
 function generateRandomColor() {
     let randomColor = '';
-    while (randomColor.length <= 5) {
+    while (randomColor.length <= 5) { // prevent 5 digit string?
         randomColor = Math.floor(Math.random() * 16777215).toString(16);
     }
     return '#' + randomColor;
@@ -43,7 +38,7 @@ function generateRandomColor() {
 
 // moves counter
 function increaseMoveCounter() {
-    document.getElementById("moves").innerText++
+    document.getElementById("moves").innerText++;
 }
 
 function resetMoves() {
@@ -51,10 +46,9 @@ function resetMoves() {
 }
 
 // drag & drop
-
-function unsetDraggable() {
+function disableDragging() {
     document.querySelectorAll(".disk").forEach(el => {
-        el.draggable = false
+        el.draggable = false;
     });
 }
 
@@ -78,18 +72,17 @@ function drag(ev) {
 function drop(ev, el) {
     ev.preventDefault();
     if (isValidMove(ev, el)) {
-        increaseMoveCounter();
         let data = ev.dataTransfer.getData("text");
         el.appendChild(document.getElementById(data));
+        increaseMoveCounter();
     }
-    unsetDraggable();
+    disableDragging();
     if (!isFinished()) {
         setDraggable();
     }
 }
 
 // rules
-
 function isValidMove(ev, el) {
     let value = ev.dataTransfer.getData("value")
     if (el.lastElementChild == null) {
@@ -104,7 +97,7 @@ function isFinished() {
     let count = '' + document.getElementById("pillar-right").childElementCount;
     if (targetCount === count) {
         setTimeout(function () {
-            alert("Well done!!")
+            alert("Well done!!");
         }, 100)
         return true;
     }

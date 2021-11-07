@@ -10,10 +10,10 @@
 <body>
 <nav>
     <label for="number">Difficulty: </label>
-    <input id="number" type="range" min="3" max="10" value="3" oninput="this.nextElementSibling.value = this.value">
+    <input id="number" type="range" min="2" max="20" value="3" oninput="this.nextElementSibling.value = this.value">
     <output>3</output>
-    <button type="submit" onclick="start()">Ok</button>
-    <button type="submit" onclick="solve()">SOLVE</button>
+    <button type="submit" onclick="initTower()">Ok</button>
+    <button id="solve" type="submit" onclick="startAutoSolve()">SOLVE</button>
     <label for="moves">Moves: </label>
     <output id="moves">0</output>
 </nav>
@@ -35,7 +35,7 @@
 </footer>
 <script>
     // auto start with 3 disks
-    start();
+    initTower();
 </script>
 </body>
 </html>
