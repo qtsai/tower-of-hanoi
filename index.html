@@ -64,6 +64,7 @@
                 }, false);
                 pillar.appendChild(disk);
             }
+            resetMoves()
             resetDraggable()
             setDraggable();
         }
@@ -90,6 +91,14 @@
             })
         }
 
+        function increaseMoveCounter() {
+            document.getElementById("moves").innerText++
+        }
+
+        function resetMoves() {
+            document.getElementById("moves").innerText = '0';
+        }
+
         function allowDrop(ev) {
             ev.preventDefault();
         }
@@ -102,6 +111,7 @@
         function drop(ev, el) {
             ev.preventDefault();
             if (isValidMove(ev, el)) {
+                increaseMoveCounter();
                 let data = ev.dataTransfer.getData("text");
                 el.appendChild(document.getElementById(data));
             }
@@ -187,11 +197,13 @@
 </head>
 <body>
 <nav>
-    <label for="number">Number: </label>
+    <label for="number">Difficulty: </label>
     <input id="number" type="range" min="3" max="10" value="3" oninput="this.nextElementSibling.value = this.value">
     <output>3</output>
     <button type="submit" onclick="start()">Ok</button>
     <button type="submit" onclick="solve()">SOLVE</button>
+    <label for="moves">Moves: </label>
+    <output id="moves">0</output>
 </nav>
 <main>
     <div class="container">
